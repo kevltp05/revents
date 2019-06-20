@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Grid, Button } from 'semantic-ui-react';
 import EventList from '../EventList/EventList';
 import EventForm from '../EventForm/EventForm';
+import cuid from 'cuid';
 
 const eventsFromDashboard = [
   {
@@ -63,10 +64,22 @@ class EventDashboard extends Component {
 
     handleIsOpenToggle = () => {
         // Before we passed in prevState and used  prevState.isOpen
-        // Instead we destructured isOpen
+        // Instead we destructured it into isOpen
         this.setState(({isOpen}) => ({
             isOpen: !isOpen
         }))
+    }
+
+    handleCreateEvent = (newEvent) => {
+      newEvent.id = cuid();
+      newEvent.hostPhotoURL = '/assets/user.png';
+
+      // We destructured the events from prevState and then
+      // used the spread operator to add the newEvent into the events array
+      this.setState(({events}) => ({
+        events: [...events, newEvent],
+        isOpen: false
+      }))
     }
 
     render() {
@@ -81,7 +94,7 @@ class EventDashboard extends Component {
                         <Button 
                         onClick={this.handleIsOpenToggle} 
                         positive content='CreateEvent' />
-                            {isOpen && <EventForm cancelFormOpen={this.handleIsOpenToggle}/>} 
+                            {isOpen && <EventForm createEvent={this.handleCreateEvent} cancelFormOpen={this.handleIsOpenToggle}/>} 
                     </Grid.Column>
                 </Grid>      
         );
