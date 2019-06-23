@@ -33,6 +33,7 @@ class NavBar extends Component {
                     
                     <Menu.Item as={NavLink} to='/events' name="Events" />
                     <Menu.Item as={NavLink} to='/people' name="People" />
+                    <Menu.Item as={NavLink} to='/test' name="Test" />
 
                     <Menu.Item>
                         <Button 
@@ -55,4 +56,6 @@ class NavBar extends Component {
     }
 }
 
+// withRouter allows us to using capabilities without actually having the
+// component in a <Route>, we needed this to use the history object with NavBar
 export default withRouter(NavBar);
