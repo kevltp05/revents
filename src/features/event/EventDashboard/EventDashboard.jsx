@@ -1,131 +1,84 @@
 import React, { Component } from 'react';
-import { Grid, Button } from 'semantic-ui-react';
+import { Grid } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 import EventList from '../EventList/EventList';
-import EventForm from '../EventForm/EventForm';
-import cuid from 'cuid';
+import { createEvent, updateEvent, deleteEvent } from '../eventActions';
 
-const eventsFromDashboard = [
-  {
-    id: '1',
-    title: 'Trip to Tower of London',
-    date: '2018-03-27',
-    category: 'culture',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.',
-    city: 'London, UK',
-    venue: "Tower of London, St Katharine's & Wapping, London",
-    hostedBy: 'Bob',
-    hostPhotoURL: 'https://randomuser.me/api/portraits/men/20.jpg',
-    attendees: [
-      {
-        id: 'a',
-        name: 'Bob',
-        photoURL: 'https://randomuser.me/api/portraits/men/20.jpg'
-      },
-      {
-        id: 'b',
-        name: 'Tom',
-        photoURL: 'https://randomuser.me/api/portraits/men/22.jpg'
-      }
-    ]
-  },
-  {
-    id: '2',
-    title: 'Trip to Punch and Judy Pub',
-    date: '2018-03-28',
-    category: 'drinks',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.',
-    city: 'London, UK',
-    venue: 'Punch & Judy, Henrietta Street, London, UK',
-    hostedBy: 'Tom',
-    hostPhotoURL: 'https://randomuser.me/api/portraits/men/22.jpg',
-    attendees: [
-      {
-        id: 'b',
-        name: 'Tom',
-        photoURL: 'https://randomuser.me/api/portraits/men/22.jpg'
-      },
-      {
-        id: 'a',
-        name: 'Bob',
-        photoURL: 'https://randomuser.me/api/portraits/men/20.jpg'
-      }
-    ]
-  }
-]
+const mapStateToProps = (state) => ({
+  events: state.events
+})
 
+const actions = {
+  createEvent,
+  updateEvent,
+  deleteEvent
+}
 
 class EventDashboard extends Component {
-    state = {
-        events: eventsFromDashboard,
-        isOpen: false,
-        selectedEvent: null
-    }
-
-    // handleIsOpenToggle = () => {
-    //     // Before we passed in prevState and used  prevState.isOpen
-    //     // Instead we destructured it into isOpen
-    //     this.setState(({isOpen}) => ({
-    //         isOpen: !isOpen
-    //     }))
+    // state = {
+    //     isOpen: false,
+    //     selectedEvent: null
     // }
 
-    handleCreateFormOpen = () => {
-      this.setState({
-        isOpen: true,
-        selectedEvent: null
-      })
-    }
+    // handleCreateFormOpen = () => {
+    //   this.setState({
+    //     isOpen: true,
+    //     selectedEvent: null
+    //   })
+    // }
 
-    handleFormCancel = () => {
-      this.setState({
-        isOpen: false
-      })
-    }
+    // handleFormCancel = () => {
+    //   this.setState({
+    //     isOpen: false
+    //   })
+    // }
 
-    handleCreateEvent = (newEvent) => {
-      newEvent.id = cuid();
-      newEvent.hostPhotoURL = '/assets/user.png';
+    // handleCreateEvent = (newEvent) => {
+    //   newEvent.id = cuid();
+    //   newEvent.hostPhotoURL = '/assets/user.png';
 
-      // We destructured the events from prevState and then
-      // used the spread operator to add the newEvent into the events array
-      this.setState(({events}) => ({
-        events: [...events, newEvent],
-        isOpen: false
-      }))
-    }
+    //   this.props.createEvent(newEvent)
+    //   // We destructured the events from prevState and then
+    //   // used the spread operator to add the newEvent into the events array
+    //   this.setState(({events}) => ({
+    //     // events: [...events, newEvent],
+    //     isOpen: false
+    //   }))
+    // }
 
-    handleSelectEvent = (event) => {
-      this.setState({
-        selectedEvent: event,
-        isOpen: true
-      })
-    }
+    // handleSelectEvent = (event) => {
+    //   this.setState({
+    //     selectedEvent: event,
+    //     isOpen: true
+    //   })
+    // }
 
-    handleUpdateEvent = (updatedEvent) => {
-      // We want to get info from prevState, so we destructure events
-      this.setState(({events}) => ({
-        events: events.map(event => {
-          if (event.id === updatedEvent.id) {
-            return {...updatedEvent}
-          } else {
-            return event
-          }
-        }),
-        isOpen: false,
-        selectedEvent: null
-      }))
-    }
+    // handleUpdateEvent = (updatedEvent) => {
+    //   // We want to get info from prevState, so we destructure events
+    //   this.props.updateEvent(updatedEvent)
+    //   // this.setState(({events}) => ({
+    //   //   // events: events.map(event => {
+    //   //   //   if (event.id === updatedEvent.id) {
+    //   //   //     return {...updatedEvent}
+    //   //   //   } else {
+    //   //   //     return event
+    //   //   //   }
+    //   //   // }),
+    //   //   isOpen: false,
+    //   //   selectedEvent: null
+    //   // }))
+    // }
 
     handleDeleteEvent = (id) => {
-      this.setState(({events}) => ({
-        events: events.filter(e => e.id !== id)
-      }))
+      // this.setState(({events}) => ({
+      //   events: events.filter(e => e.id !== id)
+      // }))
+      this.props.deleteEvent(id);
     }
 
     render() {
-        const { events, isOpen, selectedEvent } = this.state;
+        // const { isOpen, selectedEvent } = this.state;
+        const { events } = this.props;
 
         return (
                 <Grid>
@@ -133,10 +86,12 @@ class EventDashboard extends Component {
                         <EventList 
                           events={events}
                           deleteEvent={this.handleDeleteEvent} 
-                          selectEvent={this.handleSelectEvent}/>
+                          // selectEvent={this.handleSelectEvent}
+                          />
                     </Grid.Column>
                     <Grid.Column width={6}>
-                        <Button 
+                      <h2>Activity Feed</h2>
+                        {/* <Button 
                         onClick={this.handleCreateFormOpen} 
                         positive content='CreateEvent' />
                             {isOpen && 
@@ -149,15 +104,16 @@ class EventDashboard extends Component {
                                 updateEvent={this.handleUpdateEvent}
                                 selectedEvent={selectedEvent}
                                 createEvent={this.handleCreateEvent} 
-                                cancelFormOpen={this.handleFormCancel}/>} 
+                                cancelFormOpen={this.handleFormCancel}/>}  */}
                     </Grid.Column>
                 </Grid>      
         );
     }
 }
 
-export default EventDashboard;
+export default connect(mapStateToProps, actions)(EventDashboard);
 
+// Before redux
 // When the page loads isOpen is false and selectedEvent is null(doesn't have an id)
 // this causes the form to be closed, when the create Event button is clicked it causes
 // handleCreateFormOpen to run which sets isOpen to true, opening the form
@@ -180,3 +136,12 @@ export default EventDashboard;
 // When the form component opens and mounts componentDidMount runs and checks to see
 // if the selectedEvent passed to it is null, if it is not, then it updates
 // its state to the props on the selected event that was passed to it
+
+// After Redux
+// We have brought in our actions and put them in an object called actions that
+// we passed into the connect function. We also brought in mapStateToProps to 
+// which is getting the initialState from the eventReducer file.
+// We can now use our reducers through this.props and then the reducer we want to use
+// and pass in the argument that we want
+// I kept the old code, but commented it out
+// 

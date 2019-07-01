@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Container } from 'semantic-ui-react';
-import { Route } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import EventDashboard from '../../features/event/EventDashboard/EventDashboard';
 import NavBar from '../../features/nav/NavBar/NavBar';
 import EventForm from '../../features/event/EventForm/EventForm';
@@ -24,13 +24,18 @@ class App extends Component {
            <Fragment>
             <NavBar />
             <Container className="main">
-              <Route path="/events" component={EventDashboard} />
-              <Route path="/event/:id" component={EventDetailedPage} />
-              <Route path="/people" component={PeopleDashboard} />
-              <Route path="/profile/:id" component={UserDetailedPage} />
-              <Route path="/settings" component={SettingsDashboard} />
-              <Route path="/createEvent" component={EventForm} />
-              <Route path="/test" component={TestComponent} />
+              {/* We added in Switch and used withRouter so that we could use a key
+                  to know when a component has changed. Before the data wouldn't change
+                  when going betwee createEvent and manage/:id */}
+              <Switch key={this.props.location.key}>
+                <Route exact path="/events" component={EventDashboard} />
+                <Route path="/events/:id" component={EventDetailedPage} />
+                <Route path="/people" component={PeopleDashboard} />
+                <Route path="/profile/:id" component={UserDetailedPage} />
+                <Route path="/settings" component={SettingsDashboard} />
+                <Route path={["/createEvent", "/manage/:id"]} component={EventForm} />
+                <Route path="/test" component={TestComponent} />
+              </Switch>
             </Container>
           </Fragment>
          )}
@@ -40,4 +45,5 @@ class App extends Component {
   }
 }
  
-export default App;
+// withRouter lets our app have access to the routing props
+export default withRouter(App);

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { Segment, Item, Icon, List, Button } from 'semantic-ui-react';
 import EventListAttendee from './EventListAttendee';
+import { Link } from 'react-router-dom';
 
 class EventListItem extends Component {
     render() {
-        const { event, selectEvent, deleteEvent } = this.props;
+        const { event, deleteEvent} = this.props;
 
         return (
             <Segment.Group>
@@ -49,8 +50,9 @@ class EventListItem extends Component {
                     // We wrap this in an arrow function so that the 
                     // function isn't immediately called and we can still
                     // pass the event as a parameter
-                    onClick={() => selectEvent(event)}
-                    as="a" 
+                    // onClick={() => selectEvent(event)}
+                    as={Link} 
+                    to={`/events/${event.id}`}
                     color="teal" 
                     floated="right" 
                     content="View" />

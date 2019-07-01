@@ -5,6 +5,8 @@ import App from './app/layout/App.jsx';
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import { configureStore } from './app/store/configureStore';
+import ScrollToTop from './app/common/util/ScrollToTop.jsx';
+ 
 
 const store = configureStore();
 
@@ -16,7 +18,9 @@ let render = () => {
         // in store(configureStore) as a prop
         <Provider store={store}>
             <BrowserRouter>
-                <App />
+                <ScrollToTop>
+                    <App />
+                </ScrollToTop>
             </BrowserRouter>
         </Provider>
     , rootEl);
