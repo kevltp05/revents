@@ -18,7 +18,7 @@ const DateInput = ({
         placeholderText={placeholder}
         selected={value ? new Date(value) : null}
         onChange={onChange}
-        onBlur={() => onBlur()}
+        onBlur={onBlur}
         {...restInput}
       />
       {touched &&

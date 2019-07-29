@@ -1,27 +1,45 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
 import { NavLink, Link, withRouter } from 'react-router-dom';
 import { Menu, Container, Button } from 'semantic-ui-react';
-import SignedInMenu from '../Menus/SignedInMenu';
-import SignedOutMenu from '../Menus/SignedOutMenu';
+import SignedOutMenu from "../Menus/SignedOutMenu";
+import SignedInMenu from "../Menus/SignedInMenu";
+import { openModal } from "../../modals/modalActions";
+import { logout } from '../../auth/authActions';
+
+const actions = {
+    openModal,
+    logout
+}
+
+// Since we have connect we can now get our auth from the store
+const mapStateToProps = (state) => ({
+    auth: state.auth
+})
 
 class NavBar extends Component {
-    state = {
-        authenticated: false
-    }
+    // We are now getting our state from the store
+    // state = {
+    //     authenticated: false
+    // }
 
     handleSignIn = () => {
-        this.setState({
-            authenticated: true
-        })
+        this.props.openModal('LoginModal')
+    }
+
+    handleRegister = () => {
+        this.props.openModal('RegisterModal')
     }
 
     handleSignOut = () => {
-        this.setState({ authenticated: false});
+        // this.setState({ authenticated: false});
+        this.props.logout()
         this.props.history.push('/');
     }
 
     render() {
-        const { authenticated } = this.state;
+        const { auth } = this.props;
+        const authenticated = auth.authenticated;
 
         return (
             <Menu inverted fixed="top">
@@ -46,8 +64,8 @@ class NavBar extends Component {
                     </Menu.Item>
 
                     {authenticated ? (
-                        <SignedInMenu  signOut={this.handleSignOut} />
-                    ) : <SignedOutMenu signIn={this.handleSignIn} />}
+                        <SignedInMenu  signOut={this.handleSignOut} currentUser={auth.currentUser} />
+                    ) : <SignedOutMenu signIn={this.handleSignIn} register={this.handleRegister} />}
                     
                     
                 </Container>
@@ -58,4 +76,9 @@ class NavBar extends Component {
 
 // withRouter allows us to using capabilities without actually having the
 // component in a <Route>, we needed this to use the history object with NavBar
-export default withRouter(NavBar);
+export default withRouter(
+    connect(
+      mapStateToProps,
+      actions
+    )(NavBar)
+);

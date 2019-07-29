@@ -10,11 +10,13 @@ import UserDetailedPage from '../../features/user/UserDetailed/UserDetailedPage'
 import SettingsDashboard from '../../features/user/Settings/SettingsDashboard';
 import HomePage from '../../features/home/HomePage';
 import TestComponent from '../../features/testarea/TestComponent';
+import ModalManager from '../../features/modals/ModalManager';
  
 class App extends Component {
   render() {
     return (
       <Fragment>
+        <ModalManager />
          <Route path="/" exact component={HomePage} />
          <Route 
          // Here we are saying that if the path has a / with anything
